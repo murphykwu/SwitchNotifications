@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity" >
+
+    <Switch
+        android:id="@+id/switch_all_Notifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/turnoff_all" />
+<!--   用来验证和显示switchbutton  -->
+    <com.konka.switchnotifications.widget.SwitchButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+         
+
+    <TextView
+        android:id="@+id/tv_list_apps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/switch_all_Notifications"
+        android:layout_below="@+id/switch_all_Notifications"
+        android:layout_marginTop="15dp"
+        android:text="@string/list_apps" />
+
+    <ListView
+        android:id="@+id/lv_apps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_list_apps"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/tv_list_apps" >
+
+    </ListView>
+
+</RelativeLayout>
