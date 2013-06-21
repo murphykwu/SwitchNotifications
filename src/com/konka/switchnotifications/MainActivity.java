@@ -1,8 +1,10 @@
 package com.konka.switchnotifications;
 
+//import android.app.INotificationManager;
 import java.util.ArrayList;
 import java.util.List;
 import android.os.Bundle;
+import android.os.ServiceManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -12,9 +14,9 @@ import android.view.Menu;
 
 public class MainActivity extends Activity {
 //	private ApplicationsState mApplicationsState;
-	PackageManager mPackageManager = this.getPackageManager();
-	List<PackageInfo> mPackageInfoList = mPackageManager.getInstalledPackages(0);
-	ArrayList<AppInfo> mAppsList = new ArrayList<AppInfo>();//存放所有安装程序的数据
+	PackageManager mPackageManager;
+	List<PackageInfo> mPackageInfoList;
+	ArrayList<AppInfo> mAppsList;//存放所有安装程序的数据
 		
 
 	@Override
@@ -22,13 +24,17 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		mPackageManager = this.getPackageManager();
+		mPackageInfoList = mPackageManager.getInstalledPackages(0);
+		mAppsList = new ArrayList<AppInfo>();
+		
 		initAppsList();
 	}
 	
 	private void initAppsList()
 	{
-//		INotificationManager nm = INotificationManager.Stub.asInterface(
-//				ServiceManager.getService(Context.NOTIFICATION_SERVICE));
+		INotificationManager nm = INotificationManager.Stub.asInterface(
+				ServiceManager.getService(Context.NOTIFICATION_SERVICE));
 		for(int i = 0; i < mPackageInfoList.size(); i ++)
 		{
 			PackageInfo packageInfo = mPackageInfoList.get(i);
