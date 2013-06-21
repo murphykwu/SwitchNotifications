@@ -6,6 +6,7 @@ import java.util.List;
 import android.os.Bundle;
 import android.os.ServiceManager;
 import android.app.Activity;
+import android.app.INotificationManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
