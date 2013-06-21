@@ -6,5 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="turnoff_all">Close all Notifications</string>
     <string name="list_apps">Applications shown in notification center:</string>
+    <string name="list_apps_def_name">Default application</string>
+    <string name="iv_description">The image of the application!</string>
 
 </resources>
