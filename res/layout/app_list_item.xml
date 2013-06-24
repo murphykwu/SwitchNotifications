@@ -7,27 +7,31 @@
 
     <ImageView
         android:id="@+id/iv_app_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:src="@drawable/ic_launcher"
         android:contentDescription="@string/iv_description"
+        android:layout_centerVertical="true"
         android:layout_gravity="center_vertical" />
 
     <TextView
         android:id="@+id/tv_app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:text="@string/list_apps_def_name"
-        android:layout_gravity="center_vertical"
+        android:textColor="#000000"
         android:layout_toRightOf="@id/iv_app_icon"
+        android:layout_marginLeft="5dip"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <com.konka.switchnotifications.widget.SwitchButton
+        android:id="@+id/sb_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_toRightOf="@id/tv_app_name"
-        android:layout_alignLeft="@id/parent"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dip"
         android:paddingRight="6dip"/>
 
 </RelativeLayout>

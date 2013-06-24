@@ -8,5 +8,6 @@
     <string name="list_apps">Applications shown in notification center:</string>
     <string name="list_apps_def_name">Default application</string>
     <string name="iv_description">The image of the application!</string>
+    <string name="settings_safetylegal_activity_loading">Loading...</string>
 
 </resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">消息中心屏蔽通知</string>
+    <string name="action_settings">設置</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="turnoff_all">屏蔽消息中心所有推送通知</string>
+    <string name="list_apps">在通知中心顯示的應用：</string>
+    <string name="list_apps_def_name">默認應用</string>
+    <string name="iv_description">應用圖標</string>
+    <string name="settings_safetylegal_activity_loading">正在載入...</string>
+</resources>
