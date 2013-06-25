@@ -59,7 +59,7 @@ public class SwitchButton extends CheckBox {
 	private boolean mBroadcasting;
 	private boolean mTurningOn;
 	private PerformClick mPerformClick;
-	private OnCheckedChangeListener mOnCheckedChangeListener;
+	private SwitchOnCheckedChangeListener mOnCheckedChangeListener;
 	private OnCheckedChangeListener mOnCheckedChangeWidgetListener;
 	private boolean mAnimating;
 	private final float VELOCITY = 350;
@@ -67,7 +67,8 @@ public class SwitchButton extends CheckBox {
 	private final float EXTENDED_OFFSET_Y = 15;
 	private float mExtendOffsetY;//Y轴方向扩大的区域，增大点击区域
 	private float mAnimationPosition;
-	private float mAnimatedVelocity;	
+	private float mAnimatedVelocity;
+	private String mPkgName;
 	
 
 	public SwitchButton(Context context, AttributeSet attrs) {
@@ -191,7 +192,7 @@ public class SwitchButton extends CheckBox {
     		//改变选中状态的时候，触发注册在这个控件上面的响应函数。
     		if(mOnCheckedChangeListener != null)
     		{
-    			mOnCheckedChangeListener.onCheckedChanged(SwitchButton.this, mChecked);
+    			mOnCheckedChangeListener.onCheckedChanged(SwitchButton.this, mChecked, mPkgName);
     		}
     		
     		if(mOnCheckedChangeWidgetListener != null)
@@ -208,8 +209,9 @@ public class SwitchButton extends CheckBox {
      * 
      * @param listener the callback to call on checked state change
      */
-    public void setOnCheckedChangeListener(OnCheckedChangeListener listener) {
+    public void setOnCheckedChangeListener(SwitchOnCheckedChangeListener listener, String pkgName) {
         mOnCheckedChangeListener = listener;
+        mPkgName = pkgName;
     }
 
     /**
