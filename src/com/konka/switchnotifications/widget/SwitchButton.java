@@ -59,7 +59,7 @@ public class SwitchButton extends CheckBox {
 	private boolean mBroadcasting;
 	private boolean mTurningOn;
 	private PerformClick mPerformClick;
-	private SwitchOnCheckedChangeListener mOnCheckedChangeListener;
+	private OnCheckedChangeListener mOnCheckedChangeListener;
 	private OnCheckedChangeListener mOnCheckedChangeWidgetListener;
 	private boolean mAnimating;
 	private final float VELOCITY = 350;
@@ -148,6 +148,7 @@ public class SwitchButton extends CheckBox {
     }
     
     public void toggle(){
+    	Log.i(TAG, "toggle");
     	setChecked(!mChecked);
     }
     
@@ -157,6 +158,7 @@ public class SwitchButton extends CheckBox {
      */
     private void setCheckedDelayed(final boolean checked)
     {
+    	Log.i(TAG, "setCheckedDelayed");
     	this.postDelayed(new Runnable(){
 
 			@Override
@@ -175,8 +177,10 @@ public class SwitchButton extends CheckBox {
      */
     public void setChecked(boolean checked)
     {
+    	Log.i(TAG, "--------->setChecked checked = " + checked + ", mChecked = " + mChecked);
     	if(mChecked != checked)
     	{
+    		
     		mChecked = checked;
     		
     		mBtnPos = checked ? mBtnOnPos : mBtnOffPos;
@@ -192,11 +196,16 @@ public class SwitchButton extends CheckBox {
     		//改变选中状态的时候，触发注册在这个控件上面的响应函数。
     		if(mOnCheckedChangeListener != null)
     		{
-    			mOnCheckedChangeListener.onCheckedChanged(SwitchButton.this, mChecked, mPkgName);
+    			Log.i(TAG, "setChecked---mOnCheckedChangeListener triggle the listener");
+    			mOnCheckedChangeListener.onCheckedChanged(SwitchButton.this, mChecked);
+    		}else
+    		{
+    			Log.i(TAG, "setChecked---mOnCheckedChangeListener = null");
     		}
     		
     		if(mOnCheckedChangeWidgetListener != null)
     		{
+    			Log.i(TAG, "setChecked---mOnCheckedChangeWidgetListener");
     			mOnCheckedChangeWidgetListener.onCheckedChanged(SwitchButton.this, mChecked);
     		}
     		mBroadcasting = false;
@@ -209,9 +218,8 @@ public class SwitchButton extends CheckBox {
      * 
      * @param listener the callback to call on checked state change
      */
-    public void setOnCheckedChangeListener(SwitchOnCheckedChangeListener listener, String pkgName) {
+    public void setOnCheckedChangeListener(OnCheckedChangeListener listener) {
         mOnCheckedChangeListener = listener;
-        mPkgName = pkgName;
     }
 
     /**
@@ -235,7 +243,7 @@ public class SwitchButton extends CheckBox {
     	float y = event.getY();
     	float deltaX = Math.abs(x - mFirstDownX);
     	float deltaY = Math.abs(y - mFirstDownY);
-    	Log.i(TAG, "onTouchEvent");
+//    	Log.i(TAG, "onTouchEvent");
     	switch(action)
     	{
     	case MotionEvent.ACTION_DOWN:    		
@@ -244,13 +252,13 @@ public class SwitchButton extends CheckBox {
     		mFirstDownY = y;
     		mCurBtnPic = mBtnPressed;
     		mBtnInitPos = mChecked ? mBtnOnPos : mBtnOffPos;
-    		Log.i(TAG, "onTouchEvent-DOWN: mFirstDownX = " + mFirstDownX + ", mBtnInitPos = " + mBtnInitPos);
+//    		Log.i(TAG, "onTouchEvent-DOWN: mFirstDownX = " + mFirstDownX + ", mBtnInitPos = " + mBtnInitPos);
     		break;
     	case MotionEvent.ACTION_MOVE:
     		float time = event.getEventTime() - event.getDownTime();
     		mBtnPos = mBtnInitPos + event.getX() - mFirstDownX;
-    		Log.i(TAG, "mBtnPos = " + mBtnPos + ", (mBtnOnPos, mBtnOffPos) = (" + mBtnOnPos + ", "+ mBtnOffPos + ")"
-    				+ "evnent.getx() = " + event.getX() + ", mFirstDownX = " + mFirstDownX);
+//    		Log.i(TAG, "mBtnPos = " + mBtnPos + ", (mBtnOnPos, mBtnOffPos) = (" + mBtnOnPos + ", "+ mBtnOffPos + ")"
+//    				+ "evnent.getx() = " + event.getX() + ", mFirstDownX = " + mFirstDownX);
     		if(mBtnPos >= mBtnOffPos)
     		{
     			mBtnPos = mBtnOffPos;
@@ -263,12 +271,12 @@ public class SwitchButton extends CheckBox {
     		mTurningOn = mBtnPos > ((mBtnOffPos - mBtnOnPos) / 2 + mBtnOnPos);   		
 
     		mRealPos = getRealPos(mBtnPos);
-    		Log.i(TAG, "onTouchEvent-MOVE: mBtnPos = " + mBtnPos + ", mBtnInitPos = " + mBtnInitPos);
+//    		Log.i(TAG, "onTouchEvent-MOVE: mBtnPos = " + mBtnPos + ", mBtnInitPos = " + mBtnInitPos);
     		break;
     	case MotionEvent.ACTION_UP:
     		mCurBtnPic = mBtnNormal;
     		time = event.getEventTime() - event.getDownTime();
-    		Log.i(TAG, "onTouchEvent-UP: (deltaX, deltaY) = (" + deltaX + ", " + deltaY + ")" + ", mTouchSlop = " + mTouchSlop);
+//    		Log.i(TAG, "onTouchEvent-UP: (deltaX, deltaY) = (" + deltaX + ", " + deltaY + ")" + ", mTouchSlop = " + mTouchSlop);
     		//由于在actionup的时候，发现按钮没有到达左右两边的最顶端，发现是action move的时候，没有将按钮坐标mBtnPos置为正确的值。所以在
     		//up的时候重新赋值。
     		if(mTurningOn)
@@ -289,7 +297,7 @@ public class SwitchButton extends CheckBox {
     				performClick();
     			}
     		}else{
-    			Log.i(TAG, "onTouchEvent-UP startAnimation()");
+//    			Log.i(TAG, "onTouchEvent-UP startAnimation()");
     			startAnimation(!mTurningOn);
     		}
     		break;
@@ -327,7 +335,7 @@ public class SwitchButton extends CheckBox {
 		//绘制底部图片
 		canvas.drawBitmap(mBottom, mRealPos, mExtendOffsetY, mPaint);
 		mPaint.setXfermode(null);
-		Log.i(TAG, "onDraw--draw bottom mRealPos = " + mRealPos + ", mExtendOffsetY = " + mExtendOffsetY);
+//		Log.i(TAG, "onDraw--draw bottom mRealPos = " + mRealPos + ", mExtendOffsetY = " + mExtendOffsetY);
 		//绘制边框
 		canvas.drawBitmap(mFrame, 0, mExtendOffsetY, mPaint);
 		
@@ -347,6 +355,7 @@ public class SwitchButton extends CheckBox {
 	
 	private void startAnimation(boolean turnOn)
 	{
+		Log.i(TAG, "startAnimation");
 		mAnimating = true;
 		mAnimatedVelocity = turnOn ? -mVelocity : mVelocity;
 		mAnimationPosition = mBtnPos;
@@ -374,14 +383,17 @@ public class SwitchButton extends CheckBox {
 	
 	private void doAnimation()
 	{
+		Log.i(TAG, "----->doAnimation");
 		mAnimationPosition += mAnimatedVelocity * FrameAnimationController.ANIMATION_FRAME_DURATION / 1000;
 		if(mAnimationPosition <= mBtnOnPos)
 		{
+			Log.i(TAG, "doAnimation---setCheckedDelayed(true)");
 			stopAnimation();
 			mAnimationPosition = mBtnOnPos;
 			setCheckedDelayed(true);
 		}else if(mAnimationPosition >= mBtnOffPos)
 		{
+			Log.i(TAG, "doAnimation---setCheckedDelayed(false)");
 			stopAnimation();
 			mAnimationPosition = mBtnOffPos;
 			setCheckedDelayed(false);

@@ -62,26 +62,14 @@ public class MainActivity extends Activity {
 				{
 					Log.i(TAG, "Thread run() start initAppList");
 					initAppsList();
-				}				
+				}
 			}
 			
 		});
 		mInitListThread.start();//启动初始化列表线程
 		
-//		mAppsAdp = new AppsListAdapter(this.getApplicationContext(), mAppsList);///////
-//		lv_apps.setAdapter(mAppsAdp);
 	}
 	
-	OnItemClickListener ocl = new OnItemClickListener() {
-
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			// TODO Auto-generated method stub
-			
-			
-		}
-	};
 	
 	/**
 	 * 在程序刚启动的时候，初始化目标应用程序的各种数据
@@ -145,6 +133,7 @@ public class MainActivity extends Activity {
 				mAppsAdp.notifyDataSetChanged();
 				lv_apps.setVisibility(View.VISIBLE);
 				mLayoutContainerLoading.setVisibility(View.INVISIBLE);
+				break;
 			}
 			super.handleMessage(msg);
 		}

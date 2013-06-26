@@ -2,12 +2,13 @@ package com.konka.switchnotifications;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import com.konka.switchnotifications.widget.SwitchButton;
-import com.konka.switchnotifications.widget.SwitchOnCheckedChangeListener;
 
+import android.app.INotificationManager;
 import android.content.Context;
+import android.os.RemoteException;
+import android.os.ServiceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,8 +60,6 @@ public class AppsListAdapter extends BaseAdapter {
 			viewHolder.iv_app = (ImageView)convertView.findViewById(R.id.iv_app_icon);
 			viewHolder.tv_app = (TextView)convertView.findViewById(R.id.tv_app_name);
 			viewHolder.sbtn_app = (SwitchButton)convertView.findViewById(R.id.sb_switch);
-//			viewHolder.sbtn_app.setOnCheckedChangeListener(new SwitchOnCheckedChangeListener() , mData.get(position).packageName);
-//			viewHoler.sbtn_app.setClickable(false);
 			convertView.setTag(viewHolder);
 		}else
 		{
@@ -82,6 +81,7 @@ public class AppsListAdapter extends BaseAdapter {
 	class SwitchButtonOnCheckedChangeListener implements OnCheckedChangeListener
 	{
 		private int mPosition;
+		private INotificationManager nm;
 		
 		public SwitchButtonOnCheckedChangeListener(int position) {
 			// TODO Auto-generated constructor stub
@@ -94,15 +94,34 @@ public class AppsListAdapter extends BaseAdapter {
 			
 			int vid = buttonView.getId();
 			Log.e(MainActivity.TAG, "onCheckedChanged11111 Position = "
-					+ mPosition + ", pkgName = " + mData.get(mPosition).packageName + "vid = " + vid);
+					+ mPosition + ", pkgName = " + mData.get(mPosition).packageName + ", vid = " + vid);
 			if(vid == viewHolder.sbtn_app.getId())
 			{
-				Log.e(MainActivity.TAG, "onCheckedChanged Position = "
-			+ mPosition + ", pkgName = " + mData.get(mPosition).packageName);
+				//可以在这里对触发的每个程序进行设置。当关闭的时候isChecked为false，如果打开则为true
+				Log.e(MainActivity.TAG, "onCheckedChanged Position = " + mPosition 
+						+ ", pkgName = " + mData.get(mPosition).packageName 
+						+ ", isChecked = " + isChecked);
+				ifCanNotify(mData.get(mPosition).packageName, isChecked);
+				
+			}
+		}
+		
+		private void ifCanNotify(String pkgName, boolean isChecked)
+		{
+			Log.e(MainActivity.TAG, "ifCanNotify");
+			nm = INotificationManager.Stub.asInterface(
+					ServiceManager.getService(Context.NOTIFICATION_SERVICE));
+			try {
+				nm.setNotificationsEnabledForPackage(pkgName, isChecked);
+				Log.i(MainActivity.TAG, "ifCanNotify pkgName = " + pkgName + ", mPosition = " + mPosition
+						+ ", mDataSize = " + mData.size());
+				mData.get(mPosition).appCanNotification = isChecked;
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
 		}
-		
 	}
 	
 	private final static class ViewHolder{
