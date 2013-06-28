@@ -17,6 +17,7 @@ import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -79,6 +80,7 @@ public class MainActivity extends Activity {
 	private void initAppsList()
 	{
 		//为了更友好的显示程序，要求在初始化列表的时候显示一个滚动条来提示用户等待
+		Log.i(TAG, "initAppsList");
 		INotificationManager nm = INotificationManager.Stub.asInterface(
 				ServiceManager.getService(Context.NOTIFICATION_SERVICE));
 		AppInfo tmpInfo = null;
@@ -116,7 +118,7 @@ public class MainActivity extends Activity {
 		mHandler.sendMessage(message);
 	}
 
-	private Handler mHandler = new Handler(){
+	public Handler mHandler = new Handler(){
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -139,6 +141,30 @@ public class MainActivity extends Activity {
 		}
 		
 	};
+
+	
+	//在手指离开屏幕的时候打印mData来的内容。看看结果到底改变没有。only for test
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// TODO Auto-generated method stub
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_UP:
+			for(int i = 0; i < mAppsList.size(); i ++)
+			{
+				Log.i(TAG, "onTouchEvent mApplist[" + i + "]:" 
+						+ ", pkgName = " + mAppsList.get(i).packageName
+						+ ", canNotify = " + mAppsList.get(i).appCanNotification);
+			}
+			
+			break;
+
+		default:
+			break;
+		}
+		return super.onTouchEvent(event);
+	}
+
 	
 
 }

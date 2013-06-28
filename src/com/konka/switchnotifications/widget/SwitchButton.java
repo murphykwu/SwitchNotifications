@@ -28,7 +28,7 @@ import android.widget.CheckBox;
  * @version 1.0
  */
 public class SwitchButton extends CheckBox {
-	private static final String TAG = "SwitchNotifications/SwitchButton";
+	private static final String TAG = "SwitchNotificationssss";//"SwitchNotifications/SwitchButton";
 	private Paint mPaint;
 	private ViewParent mParent;
 	private Bitmap mBottom;
@@ -144,6 +144,7 @@ public class SwitchButton extends CheckBox {
     
     public boolean isChecked()
     {
+    	Log.i(TAG, "isChecked mChecked = " + mChecked);
     	return mChecked;
     }
     
@@ -276,7 +277,7 @@ public class SwitchButton extends CheckBox {
     	case MotionEvent.ACTION_UP:
     		mCurBtnPic = mBtnNormal;
     		time = event.getEventTime() - event.getDownTime();
-//    		Log.i(TAG, "onTouchEvent-UP: (deltaX, deltaY) = (" + deltaX + ", " + deltaY + ")" + ", mTouchSlop = " + mTouchSlop);
+    		Log.i(TAG, "onTouchEvent-UP: (deltaX, deltaY) = (" + deltaX + ", " + deltaY + ")" + ", mTouchSlop = " + mTouchSlop);
     		//由于在actionup的时候，发现按钮没有到达左右两边的最顶端，发现是action move的时候，没有将按钮坐标mBtnPos置为正确的值。所以在
     		//up的时候重新赋值。
     		if(mTurningOn)
@@ -288,16 +289,18 @@ public class SwitchButton extends CheckBox {
     		}
     		if(deltaY < mTouchSlop && deltaX < mTouchSlop && time < mClickTimeout)
     		{
+    			Log.i(TAG, "ACTION_UP mTouchSlop");
     			if(mPerformClick == null)
     			{
     				mPerformClick = new PerformClick();
     			}
     			if(!post(mPerformClick))
     			{
+    				Log.i(TAG, "ACTION_UP performClick()");
     				performClick();
     			}
     		}else{
-//    			Log.i(TAG, "onTouchEvent-UP startAnimation()");
+    			Log.i(TAG, "onTouchEvent-UP startAnimation()");
     			startAnimation(!mTurningOn);
     		}
     		break;
@@ -313,6 +316,7 @@ public class SwitchButton extends CheckBox {
      */
     private void attemptClaimDrag()
     {
+    	Log.i(TAG, "attemptClaimDrag");
     	mParent = getParent();
     	if(mParent != null)
     	{
