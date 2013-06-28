@@ -25,6 +25,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class MainActivity extends Activity {
 	public static final String TAG = "SwitchNotificationssss";
+	public static final String TAGS = "SwitchNotificationssss2";
 	private PackageManager mPackageManager;
 	private List<PackageInfo> mPackageInfoList;
 	private ArrayList<AppInfo> mAppsList;//存放所有安装程序的数据
@@ -133,13 +134,14 @@ public class MainActivity extends Activity {
 				mAppsAdp = new AppsListAdapter(mContext, mAppsList);
 				lv_apps.setAdapter(mAppsAdp);
 				mAppsAdp.notifyDataSetChanged();
-				lv_apps.setVisibility(View.VISIBLE);
 				mLayoutContainerLoading.setVisibility(View.INVISIBLE);
+				lv_apps.setVisibility(View.VISIBLE);
+				
 				break;
 			}
 			super.handleMessage(msg);
 		}
-		
+
 	};
 
 	
