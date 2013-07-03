@@ -31,8 +31,9 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-		android:focusable="false"
         android:layout_marginRight="10dip"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:paddingRight="6dip"/>
     <!-- 如果不设置为false的话，listview的onitemclick事件就会被button的事件屏蔽        android:focusable="false" -->
 

@@ -34,8 +34,9 @@ public class MainActivity extends Activity {
 	private AppsListAdapter mAppsAdp;
 	private View mLayoutContainerLoading;
 	private Thread mInitListThread;
-	private Context mContext;	
+	private Context mContext;
 	public static final int SEND_INIT_LIST_MSG = 1000; 
+	public static final int UPDATE_LIST = SEND_INIT_LIST_MSG + 1;
 		
 
 	@Override
@@ -66,7 +67,6 @@ public class MainActivity extends Activity {
 					initAppsList();
 				}
 			}
-			
 		});
 		mInitListThread.start();//启动初始化列表线程
 		
@@ -131,41 +131,53 @@ public class MainActivity extends Activity {
 				//特别注意，在非UI线程下不能够对主线程中listview绑定的list数据进行修改。只能创建一个temlist，然后在
 				//handle里面赋值。
 				mAppsList = (ArrayList<AppInfo>) msg.obj;
-				mAppsAdp = new AppsListAdapter(mContext, mAppsList);
+				mAppsAdp = new AppsListAdapter(mContext, mAppsList, mHandler);
 				lv_apps.setAdapter(mAppsAdp);
 				mAppsAdp.notifyDataSetChanged();
 				mLayoutContainerLoading.setVisibility(View.INVISIBLE);
 				lv_apps.setVisibility(View.VISIBLE);
 				
 				break;
+//			case UPDATE_LIST:
+//				Log.i(TAGS, "send message UPDATE_LIST");
+//				mAppsAdp.notifyDataSetChanged();
+//				lv_apps.invalidate();
+//				break;
 			}
 			super.handleMessage(msg);
 		}
 
 	};
 
-	
-	//在手指离开屏幕的时候打印mData来的内容。看看结果到底改变没有。only for test
 
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
+	protected void onPause() {
 		// TODO Auto-generated method stub
-		switch (event.getAction()) {
-		case MotionEvent.ACTION_UP:
-			for(int i = 0; i < mAppsList.size(); i ++)
-			{
-				Log.i(TAG, "onTouchEvent mApplist[" + i + "]:" 
-						+ ", pkgName = " + mAppsList.get(i).packageName
-						+ ", canNotify = " + mAppsList.get(i).appCanNotification);
-			}
-			
-			break;
-
-		default:
-			break;
-		}
-		return super.onTouchEvent(event);
+		super.onPause();
+		this.finish();
 	}
+	
+//	//在手指离开屏幕的时候打印mData来的内容。看看结果到底改变没有。only for test
+//	@Override
+//	public boolean onTouchEvent(MotionEvent event) {
+//		// TODO Auto-generated method stub
+//		switch (event.getAction()) {
+//		case MotionEvent.ACTION_UP:
+//			for(int i = 0; i < mAppsList.size(); i ++)
+//			{
+//				Log.i(TAG, "onTouchEvent mApplist[" + i + "]:" 
+//						+ ", pkgName = " + mAppsList.get(i).packageName
+//						+ ", canNotify = " + mAppsList.get(i).appCanNotification);
+//			}
+//			
+//			break;
+//
+//		default:
+//			break;
+//		}
+//		return super.onTouchEvent(event);
+//	}
+	
 
 	
 

@@ -55,7 +55,7 @@ public class SwitchButton extends CheckBox {
 	private int mTouchSlop;
 	private final int MAX_ALPHA = 255;
 	private int mAlpha = MAX_ALPHA;
-	private boolean mChecked = false;
+	private boolean mChecked = true;
 	private boolean mBroadcasting;
 	private boolean mTurningOn;
 	private PerformClick mPerformClick;
