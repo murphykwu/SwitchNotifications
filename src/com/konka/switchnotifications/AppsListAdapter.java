@@ -30,16 +30,16 @@ public class AppsListAdapter extends BaseAdapter {
 	private LayoutInflater mLayoutInflater;
 	private List<AppInfo> mData;
 	private ViewHolder viewHolder;
-	private Handler uiHandler;
+//	private Handler uiHandler;
 	//存放数据改变过的位置，并且记录起来，在列表滑动的时候进行修改
 	public int[] mChangePosition;
 	public static final int THE_POSITION_CHANGED = 8;	
 	
-	public AppsListAdapter(Context context, List<AppInfo> data, Handler handler)
+	public AppsListAdapter(Context context, List<AppInfo> data)
 	{
 		mContext = context;
 		mData = data;
-		uiHandler = handler;
+//		uiHandler = handler;
 		mLayoutInflater = LayoutInflater.from(context);
 		//初始化记录某项是否点击的数组，如果点击过后就置为1，在重画的时候就会重新获取改变后的值而不是使用缓存值。
 		mChangePosition = new int[mData.size()];
@@ -138,7 +138,8 @@ public class AppsListAdapter extends BaseAdapter {
 			Toast.makeText(mContext, "position " + mPosition
 					+ ", pkgName = " + mData.get(mPosition).appName
 					+ ", isChecked = " + mData.get(mPosition).appCanNotification, Toast.LENGTH_SHORT).show();
-			ifCanNotify(mData.get(mPosition).packageName, mData.get(mPosition).appCanNotification);
+//			ifCanNotify(mData.get(mPosition).packageName, mData.get(mPosition).appCanNotification);
+			mData.get(mPosition).setNotify(mData.get(mPosition).appCanNotification);
 		}
 		
 		/**
@@ -160,9 +161,7 @@ public class AppsListAdapter extends BaseAdapter {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
-		
 	}
 
 //	class SwitchButtonOnCheckedChangeListener implements OnCheckedChangeListener

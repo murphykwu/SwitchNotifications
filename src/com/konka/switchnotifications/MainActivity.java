@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.INotificationManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -20,8 +21,12 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ProgressBar;
+import android.widget.Switch;
 
 public class MainActivity extends Activity {
 	public static final String TAG = "SwitchNotificationssss";
@@ -36,28 +41,70 @@ public class MainActivity extends Activity {
 	private Thread mInitListThread;
 	private Context mContext;
 	public static final int SEND_INIT_LIST_MSG = 1000; 
-	public static final int UPDATE_LIST = SEND_INIT_LIST_MSG + 1;
+	public static final int SWITCH_LIST = SEND_INIT_LIST_MSG + 1;
+	private Switch mSwitchAll;
+	private ProgressBar mPb;
+	private ProgressDialog mPd;
+	
 		
-
+//当所有的应用开关都是关闭的时候，需要设置switch为true，当所有的开关是打开的时候，需要设置switch为false。
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		mContext = this.getApplicationContext();
+//		mPd = new ProgressDialog(mContext);
+//		mPd.setMessage("骚后啊。。。");
+		
+		mSwitchAll = (Switch)this.findViewById(R.id.switch_all_Notifications);
+		mSwitchAll.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				// TODO Auto-generated method stub
+				/**
+				 * 当开关打开的时候，就是屏蔽所有应用的通知。
+				 * 直接将下面的listview灰显，并且改变下面list中每项的状态为真，同时记录所有的状态。
+				 * 当开关关闭的时候，将所有应用的通知选项恢复成全部屏蔽之前的，
+				 * 也就是需要存储屏蔽所有之前应用通知状态。
+				 * 在没有确认的情况下，只需要将所有的应用置为打开就行了。可以用发送handle的方式来更新，免得阻塞UI界面
+				 */
+				mLayoutContainerLoading.setVisibility(View.VISIBLE);
+				lv_apps.setVisibility(View.INVISIBLE);
+				Log.i(TAGS, "onCheckedChanged switch all isChecked = " + isChecked);
+				new Thread(new Runnable(){
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						boolean isChecked = mSwitchAll.isChecked();
+						int appsSize = mAppsList.size();				
+						for(int i = 0; i < appsSize; i ++)
+						{
+							//如果这个开关打开了，那么就关闭下面所有应用的通知开关。
+							mAppsList.get(i).appCanNotification = !isChecked;
+							mAppsList.get(i).setNotify(!isChecked);
+						}
+						Message msg = new Message();
+						msg.what = SWITCH_LIST;
+						mHandler.sendMessage(msg);
+					}
+					
+				}).start();
+			}
+		});
+		
+		mContext = MainActivity.this;
 		mPackageManager = this.getPackageManager();
 		mPackageInfoList = mPackageManager.getInstalledPackages(0);
 		mAppsList = new ArrayList<AppInfo>();
 		lv_apps = (ListView)this.findViewById(R.id.lv_apps);
-//		lv_apps.setOnItemClickListener(listener);
 		mLayoutContainerLoading = (View)this.findViewById(R.id.loading_container);
 		mLayoutContainerLoading.setVisibility(View.VISIBLE);
 		lv_apps.setVisibility(View.INVISIBLE);
 		Log.i(TAG, "onCreate");
 
-
 		mInitListThread = new Thread(new Runnable(){
-
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
@@ -68,6 +115,7 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
+		
 		mInitListThread.start();//启动初始化列表线程
 		
 	}
@@ -94,7 +142,7 @@ public class MainActivity extends Activity {
 			//将非系统应用添加到列表中来
 			if((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM)== 0)
 			{
-				tmpInfo = new AppInfo();
+				tmpInfo = new AppInfo(mContext);
 				tmpInfo.appName = packageInfo.applicationInfo.loadLabel(mPackageManager).toString();
 				tmpInfo.packageName = packageInfo.packageName;
 				tmpInfo.versionName = packageInfo.versionName;
@@ -131,18 +179,18 @@ public class MainActivity extends Activity {
 				//特别注意，在非UI线程下不能够对主线程中listview绑定的list数据进行修改。只能创建一个temlist，然后在
 				//handle里面赋值。
 				mAppsList = (ArrayList<AppInfo>) msg.obj;
-				mAppsAdp = new AppsListAdapter(mContext, mAppsList, mHandler);
+				mAppsAdp = new AppsListAdapter(mContext, mAppsList);
 				lv_apps.setAdapter(mAppsAdp);
 				mAppsAdp.notifyDataSetChanged();
 				mLayoutContainerLoading.setVisibility(View.INVISIBLE);
 				lv_apps.setVisibility(View.VISIBLE);
-				
 				break;
-//			case UPDATE_LIST:
-//				Log.i(TAGS, "send message UPDATE_LIST");
-//				mAppsAdp.notifyDataSetChanged();
-//				lv_apps.invalidate();
-//				break;
+			case SWITCH_LIST:
+				mLayoutContainerLoading.setVisibility(View.INVISIBLE);
+				lv_apps.setVisibility(View.VISIBLE);
+				mAppsAdp.notifyDataSetChanged();
+				lv_apps.invalidate();
+				break;
 			}
 			super.handleMessage(msg);
 		}
