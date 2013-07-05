@@ -53,9 +53,6 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-//		mPd = new ProgressDialog(mContext);
-//		mPd.setMessage("骚后啊。。。");
-		
 		mSwitchAll = (Switch)this.findViewById(R.id.switch_all_Notifications);
 		mSwitchAll.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
@@ -115,9 +112,7 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
-		
 		mInitListThread.start();//启动初始化列表线程
-		
 	}
 	
 	
@@ -137,7 +132,7 @@ public class MainActivity extends Activity {
 		int size = mPackageInfoList.size();
 		for(int i = 0; i < size; i ++)
 		{
-			Log.i(TAG, "initAppsList i = " + i);
+//			Log.i(TAG, "initAppsList i = " + i);
 			PackageInfo packageInfo = mPackageInfoList.get(i);
 			//将非系统应用添加到列表中来
 			if((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM)== 0)
@@ -175,7 +170,7 @@ public class MainActivity extends Activity {
 			switch(msg.what)
 			{
 			case SEND_INIT_LIST_MSG:
-				Log.i(TAG, "handleMessage");
+				Log.i(TAG, "handleMessage SEND_INIT_LIST_MSG");
 				//特别注意，在非UI线程下不能够对主线程中listview绑定的list数据进行修改。只能创建一个temlist，然后在
 				//handle里面赋值。
 				mAppsList = (ArrayList<AppInfo>) msg.obj;
@@ -194,7 +189,6 @@ public class MainActivity extends Activity {
 			}
 			super.handleMessage(msg);
 		}
-
 	};
 
 
